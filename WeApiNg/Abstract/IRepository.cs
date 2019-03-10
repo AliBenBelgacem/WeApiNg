@@ -8,6 +8,8 @@ namespace WeApiNg.Abstract
 {
     public interface IRepository
     {
-        IEnumerable<StudentMaster> StudentMasters { get; }       
+        IEnumerable<StudentMaster> StudentMasters { get; }
+        void SaveStudentMaster(StudentMaster product);
+        StudentMaster DeleteStudentMaster(int studentMasterId);
     }
 }
