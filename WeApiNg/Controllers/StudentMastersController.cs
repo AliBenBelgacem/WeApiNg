@@ -11,9 +11,11 @@ using System.Web.Http.Description;
 using WeApiNg.Abstract;
 using WeApiNg.Concrete;
 using WeApiNg.Models;
+using System.Web.Http.Cors;
 
 namespace WeApiNg.Controllers
 {
+    [EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*")]
     public class StudentMastersController : ApiController
     {
         private IRepository db;
@@ -23,6 +25,8 @@ namespace WeApiNg.Controllers
             db = repository;
         }
         // GET: api/StudentMasters
+        [HttpGet]
+        [Route("api/StudentMasters")]
         public IEnumerable<StudentMaster> GetStudentMasters()
         {
             return db.StudentMasters;
@@ -43,6 +47,7 @@ namespace WeApiNg.Controllers
 
         // PUT: api/StudentMasters/5
         [ResponseType(typeof(void))]
+        [HttpPut]
         public IHttpActionResult PutStudentMaster(int id, StudentMaster studentMaster)
         {
             if (!ModelState.IsValid)
@@ -53,9 +58,7 @@ namespace WeApiNg.Controllers
             if (id != studentMaster.StdID)
             {
                 return BadRequest();
-            }
-
-            
+            }            
 
             try
             {
@@ -73,11 +76,12 @@ namespace WeApiNg.Controllers
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+           return StatusCode(HttpStatusCode.NoContent);
         }
 
         // POST: api/StudentMasters
         [ResponseType(typeof(StudentMaster))]
+        [HttpPost]
         public IHttpActionResult PostStudentMaster(StudentMaster studentMaster)
         {
             if (!ModelState.IsValid)
