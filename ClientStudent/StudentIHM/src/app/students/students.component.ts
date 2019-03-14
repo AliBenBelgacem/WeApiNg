@@ -7,6 +7,8 @@ import {
   animate,  
   keyframes } from '@angular/animations';  
 import { HttpClient,HttpHeaders } from '@angular/common/http';
+import { promise } from 'protractor';
+
 @Component({  
     selector: 'students'   
    ,  
@@ -109,6 +111,7 @@ export class StudentsComponent {
     //for animation status   
     animStatus: string = 'inactive';  
     constructor(public http: HttpClient) {  
+        console.log('constructor');
         this.myName = "Shanu";  
         this.AddstudetnsTable = false;  
         this.getData();  
@@ -116,11 +119,12 @@ export class StudentsComponent {
   
     //for Animation to toggle Active and Inactive  
     animButton() {  
+        
         this.animStatus = (this.animStatus === 'inactive' ? 'active' : 'inactive');  
     }  
   
     //to get all the Student data from Web API  
-    getData()  
+    getData()
     {  
         this.http.get('http://localhost:63402/api/StudentMasters').subscribe((result:StudentMasters[]) => {    
             this.student = result;             
@@ -154,31 +158,68 @@ export class StudentsComponent {
     // If the studentid is 0 then insert the student infromation using post and if the student id is more than 0 then edit using put mehod  
     addStudentsDetails(StdID, StdName, Email, Phone, Address) {  
         alert(StdName);  
-        var headers = new HttpHeaders();  
-        headers.append('Content-Type', 'application/json; charset=utf-8');  
+        var headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        //headers.append('Content-Type', 'application/json; charset=utf-8');  
         if (StdID == 0)  
         {  
-            this.http.post('/api/StudentMasters/', JSON.stringify({ StdID: StdID, StdName: StdName, Email: Email, Phone: Phone, Address: Address }), { headers: headers }).subscribe();  
+            this.http.post('http://localhost:63402/api/StudentMasters', JSON.stringify({ StdID: StdID, StdName: StdName, Email: Email, Phone: Phone, Address: Address }), { headers: headers })
+            .subscribe(
+                (value) => {
+                 
+                },
+                (error) => {
+                  console.log('Uh-oh, an error occurred! : ' + error);
+                },
+                () => {
+                    this.getData()
+                  console.log('Observable complete!');
+                })
             alert("Student Detail Inserted");  
         }  
         else  
         {  
-            this.http.put('/api/StudentMasters/' + StdID, JSON.stringify({ StdID: StdID, StdName: StdName, Email: Email, Phone: Phone, Address: Address }), { headers: headers }).subscribe();  
-            alert("Student Detail Updated");  
+            console.log(StdID);
+            console.log(JSON.stringify({ StdID: StdID, StdName: StdName, Email: Email, Phone: Phone, Address: Address }));
+            this.http.put('http://localhost:63402/api/StudentMasters/' + StdID, JSON.stringify({ StdID: StdID, StdName: StdName, Email: Email, Phone: Phone, Address: Address }), { headers: headers })
+            .subscribe(
+                (value) => {
+                  
+                },
+                (error) => {
+                  console.log('Uh-oh, an error occurred! : ' + error);
+                },
+                () => {
+                    this.getData()
+                    alert("Student Detail Updated"); 
+                  console.log('Observable complete!');
+                })
+            
         }         
         
         this.AddstudetnsTable = false;   
-        this.getData();           
+       // this.getData();           
     }  
   
     //to Delete the selected student detail from database.  
-    deleteStudentsDetails(StdID) {           
+    deleteStudentsDetails(StdID) {   
+        console.log(StdID) ;       
         var headers = new HttpHeaders();  
         headers.append('Content-Type', 'application/json; charset=utf-8');  
          
-        this.http.delete('/api/StudentMasters/' + StdID, { headers: headers }).subscribe();  
-            alert("Student Detail Deleted");  
-            this.getData();          
+        this.http.delete('http://localhost:63402/api/StudentMasters/' + StdID, { headers: headers }) .subscribe(
+            (value) => {
+             
+            },
+            (error) => {
+              console.log('Uh-oh, an error occurred! : ' + error);
+            },
+            () => {
+                this.getData()
+              console.log('Observable complete!');
+              alert("Student Detail Deleted"); 
+            }); 
+             
+            //this.getData();          
     }  
   
     closeEdits()  

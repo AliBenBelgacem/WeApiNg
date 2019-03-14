@@ -45,20 +45,55 @@ namespace WeApiNg.Controllers
             return Ok(studentMaster);
         }
 
+        //// PUT: api/StudentMasters/5
+        //[ResponseType(typeof(void))]
+        //[HttpPatch]
+        //[Route("api/StudentMasters")]
+        //public IHttpActionResult PutStudentMaster(int id, StudentMaster studentMaster)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    if (id != studentMaster.StdID)
+        //    {
+        //        return BadRequest();
+        //    }            
+
+        //    try
+        //    {
+        //        db.SaveStudentMaster(studentMaster);
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!StudentMasterExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
+
+        //   return StatusCode(HttpStatusCode.NoContent);
+        //}
         // PUT: api/StudentMasters/5
         [ResponseType(typeof(void))]
         [HttpPut]
-        public IHttpActionResult PutStudentMaster(int id, StudentMaster studentMaster)
+        [Route("api/StudentMasters/{id}")]
+        public IHttpActionResult PutchStudentMaster(StudentMaster studentMaster)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != studentMaster.StdID)
-            {
-                return BadRequest();
-            }            
+            //if (id != studentMaster.StdID)
+            //{
+            //    return BadRequest();
+            //}
 
             try
             {
@@ -66,22 +101,23 @@ namespace WeApiNg.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!StudentMasterExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                //if (!StudentMasterExists(id))
+                //{
+                //    return NotFound();
+                //}
+                //else
+                //{
+                //    throw;
+                //}
             }
 
-           return StatusCode(HttpStatusCode.NoContent);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         // POST: api/StudentMasters
         [ResponseType(typeof(StudentMaster))]
         [HttpPost]
+        [Route("api/StudentMasters")]
         public IHttpActionResult PostStudentMaster(StudentMaster studentMaster)
         {
             if (!ModelState.IsValid)
@@ -90,12 +126,14 @@ namespace WeApiNg.Controllers
             }
 
             db.SaveStudentMaster(studentMaster);
-           
-            return CreatedAtRoute("DefaultApi", new { id = studentMaster.StdID }, studentMaster);
+
+            return Ok(studentMaster);// CreatedAtRoute("DefaultApi", new { id = studentMaster.StdID }, studentMaster);
         }
 
         // DELETE: api/StudentMasters/5
         [ResponseType(typeof(StudentMaster))]
+        [HttpDelete]
+        [Route("api/StudentMasters/{id}")]
         public IHttpActionResult DeleteStudentMaster(int id)
         {
             StudentMaster studentMaster = db.StudentMasters.FirstOrDefault(i=>i.StdID==id);
@@ -104,7 +142,8 @@ namespace WeApiNg.Controllers
                 return NotFound();
             }
 
-          
+            db.DeleteStudentMaster(id);
+
             return Ok(studentMaster);
         }
 
